@@ -1,6 +1,6 @@
 package modelo;
 
-public class Veiculo {
+public abstract class Veiculo {
 
     private double valorDiaria;
 
@@ -18,15 +18,9 @@ public class Veiculo {
         this.valorDiaria = valorDiaria;
     }
 
-    public double calcularDiaria() {
-        return valorDiaria;
-    }
+    public abstract double calcularDiaria();
 
-    public double calcularSeguro() {
-        return valorDiaria * 0.05;
-    }
+    public abstract double calcularSeguro();
 
-    public double calcularManutencao() {
-        return valorDiaria * 0.03;
-    }
+    public abstract double calcularManutencao();
 }
