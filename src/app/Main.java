@@ -19,6 +19,8 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
+        Locadora locadora = new Locadora();
+
         // A referência é Veiculo, mas cada objeto possui seu próprio comportamento.
         Veiculo popular = new Popular();
         Veiculo sedan = new Sedan();
@@ -28,13 +30,20 @@ public class Main {
         sedan.setValorDiaria(100);
         suv.setValorDiaria(100);
 
-        System.out.printf("Popular: R$ %.2f%n", popular.calcularDiaria());
-        System.out.printf("Sedan: R$ %.2f%n", sedan.calcularDiaria());
-        System.out.printf("SUV: R$ %.2f%n", suv.calcularDiaria());
+        locadora.cadastrarVeiculo(popular);
+        locadora.cadastrarVeiculo(sedan);
+        locadora.cadastrarVeiculo(suv);
 
-        Cliente cliente = new Cliente();
+        System.out.println("===== ROTA SEGURA =====");
+        System.out.println();
+
+        locadora.listarVeiculos();
+
+        System.out.println();
 
         try {
+
+            Cliente cliente = new Cliente();
 
             System.out.print("Digite o nome do cliente: ");
             cliente.setNome(scanner.nextLine());
@@ -42,10 +51,13 @@ public class Main {
             System.out.print("Digite o CPF do cliente: ");
             cliente.setCpf(scanner.nextLine());
 
-            System.out.println("Cliente: " + cliente.getNome());
-            System.out.println("CPF: " + cliente.getCpf());
+            locadora.cadastrarCliente(cliente);
 
-            System.out.println("\nEscolha o tipo de veiculo:");
+            System.out.println();
+            locadora.listarClientes();
+
+            System.out.println();
+            System.out.println("Escolha o tipo de veiculo:");
             System.out.println("1 - Popular");
             System.out.println("2 - Sedan");
             System.out.println("3 - SUV");
@@ -93,22 +105,36 @@ public class Main {
             contrato.setDataInicio(dataInicio);
             contrato.setDataFim(dataFim);
 
-            Locadora locadora = new Locadora();
-
             locadora.adicionarContrato(contrato);
 
+            System.out.println();
             System.out.printf(
                 "Valor do contrato: R$ %.2f%n",
                 contrato.calcularValor()
             );
 
+            System.out.println();
+            System.out.println("===== LOCACAO ABERTA =====");
+            System.out.println(contrato.gerarRelatorio());
+
+            System.out.println();
+            System.out.print("Deseja realizar a devolucao? (s/n): ");
+            String resposta = scanner.nextLine();
+
+            if (resposta.equalsIgnoreCase("s")) {
+
+                locadora.devolverVeiculo(contrato);
+
+                System.out.println();
+                System.out.println("===== FECHAMENTO DA LOCACAO =====");
+                System.out.println(contrato.gerarRelatorio());
+            }
+
+            System.out.println();
             System.out.println(
                 "Contratos cadastrados: "
                 + locadora.getContratos().size()
             );
-
-            System.out.println();
-            System.out.println(contrato.gerarRelatorio());
 
             System.out.println();
             locadora.exibirHistorico();

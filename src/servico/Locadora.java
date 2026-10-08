@@ -7,19 +7,67 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import modelo.Cliente;
 import modelo.Contrato;
 import modelo.Veiculo;
 
 public class Locadora {
 
+    private ArrayList<Veiculo> frota;
+    private ArrayList<Cliente> clientes;
     private ArrayList<Contrato> contratos;
     private ArrayList<String> historico;
 
     public Locadora() {
+        frota = new ArrayList<>();
+        clientes = new ArrayList<>();
         contratos = new ArrayList<>();
         historico = new ArrayList<>();
 
         carregarHistorico();
+    }
+
+    public void cadastrarVeiculo(Veiculo veiculo) {
+        frota.add(veiculo);
+    }
+
+    public void listarVeiculos() {
+
+        if (frota.isEmpty()) {
+            System.out.println("Nenhum veiculo cadastrado.");
+            return;
+        }
+
+        System.out.println("===== VEICULOS CADASTRADOS =====");
+
+        for (Veiculo veiculo : frota) {
+            System.out.println(
+                "Tipo: " + veiculo.getClass().getSimpleName()
+                + " | Diaria base: R$ "
+                + String.format("%.2f", veiculo.getValorDiaria())
+            );
+        }
+    }
+
+    public void cadastrarCliente(Cliente cliente) {
+        clientes.add(cliente);
+    }
+
+    public void listarClientes() {
+
+        if (clientes.isEmpty()) {
+            System.out.println("Nenhum cliente cadastrado.");
+            return;
+        }
+
+        System.out.println("===== CLIENTES CADASTRADOS =====");
+
+        for (Cliente cliente : clientes) {
+            System.out.println(
+                "Nome: " + cliente.getNome()
+                + " | CPF: " + cliente.getCpf()
+            );
+        }
     }
 
     public boolean estaDisponivel(
@@ -29,7 +77,8 @@ public class Locadora {
 
         for (Contrato contrato : contratos) {
 
-            if (contrato.getVeiculo() == veiculo) {
+            if (contrato.getVeiculo() == veiculo
+                    && !contrato.isDevolvido()) {
 
                 // Verifica se o período informado entra em conflito com outra locação.
                 boolean conflito =
@@ -59,6 +108,15 @@ public class Locadora {
 
         contratos.add(contrato);
         salvarHistorico(contrato);
+    }
+
+    public void devolverVeiculo(Contrato contrato) {
+
+        contrato.devolver();
+
+        salvarHistorico(contrato);
+
+        System.out.println("Veiculo devolvido com sucesso.");
     }
 
     private void salvarHistorico(Contrato contrato) {
@@ -114,6 +172,14 @@ public class Locadora {
         for (String linha : historico) {
             System.out.println(linha);
         }
+    }
+
+    public ArrayList<Veiculo> getFrota() {
+        return frota;
+    }
+
+    public ArrayList<Cliente> getClientes() {
+        return clientes;
     }
 
     public ArrayList<Contrato> getContratos() {

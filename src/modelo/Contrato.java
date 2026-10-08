@@ -9,6 +9,7 @@ public class Contrato implements Relatorio {
     private Veiculo veiculo;
     private LocalDate dataInicio;
     private LocalDate dataFim;
+    private boolean devolvido;
 
     public Cliente getCliente() {
         return cliente;
@@ -49,6 +50,21 @@ public class Contrato implements Relatorio {
         this.dataFim = dataFim;
     }
 
+    public boolean isDevolvido() {
+        return devolvido;
+    }
+
+    public void devolver() {
+
+        if (devolvido) {
+            throw new IllegalArgumentException(
+                "O veiculo ja foi devolvido."
+            );
+        }
+
+        devolvido = true;
+    }
+
     // O valor final considera a diária, o seguro e a manutenção do veículo.
     public double calcularValor() {
 
@@ -66,12 +82,15 @@ public class Contrato implements Relatorio {
     @Override
     public String gerarRelatorio() {
 
+        String status = devolvido ? "DEVOLVIDO" : "EM ABERTO";
+
         return "===== CONTRATO DE LOCACAO =====\n"
                 + "Cliente: " + cliente.getNome() + "\n"
                 + "CPF: " + cliente.getCpf() + "\n"
                 + "Veiculo: " + veiculo.getClass().getSimpleName() + "\n"
                 + "Data de inicio: " + dataInicio + "\n"
                 + "Data de fim: " + dataFim + "\n"
+                + "Status: " + status + "\n"
                 + String.format("Valor total: R$ %.2f", calcularValor());
     }
 }
